@@ -1,0 +1,38 @@
+header {
+  padding: 15px;
+  .banner {
+    width: 100%;
+    border-radius: 3px;
+    background-color: var(--color-primary);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    color: var(--color-text);
+    .logo {
+      p {
+        font-weight: bold;
+      }
+    }
+    input {
+      width: 33%;
+      border: none;
+      border-radius: 6px;
+      padding: 10px 10px;
+      background-color: var(--color-primary-light);
+      color: var(--color-text);
+      &::placeholder {
+        color: var(--color-text-dark);
+      }
+      &:focus {
+        outline: none;
+      }
+    }
+
+    .result-count {
+      p {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}

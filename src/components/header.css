@@ -1,8 +1,9 @@
 header {
   padding: 15px;
+  width: 100%;
   .banner {
     width: 100%;
-    border-radius: 3px;
+    border-radius: 10px;
     background-color: var(--color-primary);
     display: flex;
     justify-content: space-between;

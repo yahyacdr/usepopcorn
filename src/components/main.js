@@ -1,3 +1,4 @@
+import "./main.css";
 export default function Main(props) {
   function countAverage(arr, prop) {
     const sum = arr.reduce((acc, curr) => acc + curr[prop], 0);
@@ -47,7 +48,7 @@ function WatchList(props) {
           <img src={props.poster} alt="movie-poster" />
         </div>
         <div className="ttl-date">
-          <h2 className="title">{props.title}</h2>
+          <h4 className="title">{props.title}</h4>
           <p className="date">📅 {props.releaseYear}</p>
         </div>
       </div>
@@ -63,7 +64,7 @@ function WatchedList(props) {
           <img src={props.poster} alt="movie-poster" />
         </div>
         <div className="ttl-details">
-          <h2 className="title">{props.title}</h2>
+          <h4 className="title">{props.title}</h4>
           <div className="details">
             <p className="date">⭐ {props.rate}</p>
             <p className="date">🌟 {props.myRate}</p>
@@ -79,7 +80,7 @@ function WatchedListCounter(props) {
   return (
     <>
       <div className="counter-cntnr">
-        <h2>MOVIES YOU WATCHED</h2>
+        <h5>MOVIES YOU WATCHED</h5>
         <div className="details">
           <p>#️⃣ {props.count} movies</p>
           <p>⭐️ {props.averageRate}</p>

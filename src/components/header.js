@@ -1,4 +1,3 @@
-import "./public.css";
 import "./header.css";
 export default function Header() {
   return (

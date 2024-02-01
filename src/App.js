@@ -1,6 +1,7 @@
 import { tempMovieData, tempWatchedData } from "./movies_data";
 import Header from "./components/header";
 import Main from "./components/main";
+import "./components/public.css";
 
 function App() {
   return (

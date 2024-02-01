@@ -7,6 +7,7 @@ main {
   flex-grow: 1;
   padding: 10px 30px 20px;
   > div {
+    position: relative;
     width: 47%;
     background-color: var(--color-background-500);
     border-radius: 12px;
@@ -82,6 +83,39 @@ main {
           justify-content: space-between;
           align-items: center;
           margin-top: 5px;
+        }
+      }
+    }
+  }
+
+  .collapse-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    button {
+      width: 26px;
+      height: 26px;
+      background-color: var(--color-background-900);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: none;
+      .plus {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        .line {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 8px;
+          height: 2px;
+          background-color: var(--color-text);
+        }
+        .cross-line {
+          transform: translate(-50%, -50%) rotate(90deg);
         }
       }
     }

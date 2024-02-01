@@ -1,5 +1,10 @@
 import "./main.css";
+import { useState } from "react";
+
 export default function Main(props) {
+  const [isOpen1, setIsOpen1] = useState(true);
+  const [isOpen2, setIsOpen2] = useState(true);
+
   function countAverage(arr, prop) {
     const sum = arr.reduce((acc, curr) => acc + curr[prop], 0);
     return sum / arr.length;
@@ -7,40 +12,46 @@ export default function Main(props) {
   return (
     <main>
       <div className="watchList">
-        {props.watchList.map((wl) => (
-          <WatchList
-            poster={wl.Poster}
-            title={wl.Title}
-            releaseYear={wl.Year}
-            key={wl.imdbID}
-          ></WatchList>
-        ))}
+        <CollapseBtn isOpen={isOpen1} setIsOpen={setIsOpen1}></CollapseBtn>
+        {isOpen1 &&
+          props.watchList.map((wl) => (
+            <WatchListPanel
+              poster={wl.Poster}
+              title={wl.Title}
+              releaseYear={wl.Year}
+              key={wl.imdbID}
+            ></WatchListPanel>
+          ))}
       </div>
       <div className="watchedList">
-        <WatchedListCounter
-          count={props.watchedList.length}
-          averageRate={countAverage(props.watchedList, "imdbRating")}
-          averageMyRate={countAverage(props.watchedList, "userRating")}
-          averageDuration={countAverage(props.watchedList, "runtime")}
-        ></WatchedListCounter>
+        <CollapseBtn isOpen={isOpen2} setIsOpen={setIsOpen2}></CollapseBtn>
+        {isOpen2 && (
+          <WatchedListCounter
+            count={props.watchedList.length}
+            averageRate={countAverage(props.watchedList, "imdbRating")}
+            averageMyRate={countAverage(props.watchedList, "userRating")}
+            averageDuration={countAverage(props.watchedList, "runtime")}
+          ></WatchedListCounter>
+        )}
         <div className="list">
-          {props.watchedList.map((wdl) => (
-            <WatchedList
-              poster={wdl.Poster}
-              title={wdl.Title}
-              rate={wdl.imdbRating}
-              myRate={wdl.userRating}
-              duration={wdl.runtime}
-              key={wdl.imdbID}
-            ></WatchedList>
-          ))}
+          {isOpen2 &&
+            props.watchedList.map((wdl) => (
+              <WatchedListPanel
+                poster={wdl.Poster}
+                title={wdl.Title}
+                rate={wdl.imdbRating}
+                myRate={wdl.userRating}
+                duration={wdl.runtime}
+                key={wdl.imdbID}
+              ></WatchedListPanel>
+            ))}
         </div>
       </div>
     </main>
   );
 }
 
-function WatchList(props) {
+function WatchListPanel(props) {
   return (
     <>
       <div className="panel">
@@ -52,11 +63,12 @@ function WatchList(props) {
           <p className="date">📅 {props.releaseYear}</p>
         </div>
       </div>
+      <div className="line"></div>
     </>
   );
 }
 
-function WatchedList(props) {
+function WatchedListPanel(props) {
   return (
     <>
       <div className="panel">
@@ -89,5 +101,24 @@ function WatchedListCounter(props) {
         </div>
       </div>
     </>
+  );
+}
+
+function CollapseBtn(props) {
+  function toggleListDisplay() {
+    props.setIsOpen((ip) => !ip);
+  }
+  return (
+    <div className="collapse-btn">
+      <button type="button" onClick={toggleListDisplay}>
+        <div className="plus">
+          <span className="mid-line line"></span>
+          <span
+            className="cross-line line"
+            style={{ display: props.isOpen ? "none" : "block" }}
+          ></span>
+        </div>
+      </button>
+    </div>
   );
 }

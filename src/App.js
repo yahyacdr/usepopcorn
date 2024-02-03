@@ -5,10 +5,11 @@ import "./components/public.css";
 import { useState } from "react";
 
 function App() {
+  const [movies, setMovies] = useState(tempMovieData);
   return (
     <div className="App">
-      <Header></Header>
-      <Main watchList={tempMovieData} watchedList={tempWatchedData}></Main>
+      <Header moviesList={movies}></Header>
+      <Main watchList={movies} watchedList={tempWatchedData}></Main>
     </div>
   );
 }

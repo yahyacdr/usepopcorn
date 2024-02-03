@@ -1,5 +1,5 @@
 import "./header.css";
-export default function Header() {
+export default function Header(props) {
   return (
     <>
       <header>
@@ -10,7 +10,7 @@ export default function Header() {
           <SearchBar></SearchBar>
           <div className="result-count">
             <p>
-              Found <strong>3</strong> results
+              Found <strong>{props.moviesList.length}</strong> results
             </p>
           </div>
         </div>

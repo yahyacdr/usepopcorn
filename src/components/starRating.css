@@ -1,0 +1,12 @@
+img {
+  cursor: pointer;
+}
+
+.star-cntnr {
+  span {
+    svg {
+      width: 48px;
+      height: 48px;
+    }
+  }
+}

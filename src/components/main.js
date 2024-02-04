@@ -6,8 +6,7 @@ export default function Main(props) {
   const [isOpen2, setIsOpen2] = useState(true);
 
   function countAverage(arr, prop) {
-    const sum = arr.reduce((acc, curr) => acc + curr[prop], 0);
-    return sum / arr.length;
+    return arr.reduce((acc, curr) => acc + curr[prop], 0) / arr.length;
   }
   return (
     <main>

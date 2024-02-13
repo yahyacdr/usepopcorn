@@ -1,6 +1,4 @@
 import { useState } from "react";
-import starFilled from "./star-filled.png";
-import starOutline from "./star-outline.png";
 import "./starRating.css";
 
 export default function StarRating({ count = 5 }) {

@@ -7,10 +7,10 @@ export default function Header(props) {
           <div className="logo">
             <p>🍿 usePopcorn</p>
           </div>
-          <SearchBar></SearchBar>
+          <SearchBar handleChange={props.handleChange}></SearchBar>
           <div className="result-count">
             <p>
-              Found <strong>{props.moviesList.length}</strong> results
+              Found <strong>{props.length}</strong> results
             </p>
           </div>
         </div>
@@ -19,10 +19,14 @@ export default function Header(props) {
   );
 }
 
-function SearchBar() {
+function SearchBar(props) {
   return (
     <>
-      <input type="search" placeholder="Search movies..." />
+      <input
+        type="search"
+        placeholder="Search movies..."
+        onKeyDown={props.handleChange}
+      />
     </>
   );
 }

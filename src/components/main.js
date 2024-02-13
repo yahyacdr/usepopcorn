@@ -8,19 +8,24 @@ export default function Main(props) {
   function countAverage(arr, prop) {
     return arr.reduce((acc, curr) => acc + curr[prop], 0) / arr.length;
   }
+  console.log(props.result);
   return (
     <main>
       <div className="watchList">
         <CollapseBtn isOpen={isOpen1} setIsOpen={setIsOpen1}></CollapseBtn>
         {isOpen1 &&
-          props.watchList.map((wl) => (
-            <WatchListPanel
-              poster={wl.Poster}
-              title={wl.Title}
-              releaseYear={wl.Year}
-              key={wl.imdbID}
-            ></WatchListPanel>
-          ))}
+          props.result.Search.map((wl) =>
+            typeof wl.Error !== "string" ? (
+              <WatchListPanel
+                poster={wl.Poster}
+                title={wl.Title}
+                releaseYear={wl.Year}
+                key={wl.imdbID}
+              ></WatchListPanel>
+            ) : (
+              <h1>{wl}</h1>
+            )
+          )}
       </div>
       <div className="watchedList">
         <CollapseBtn isOpen={isOpen2} setIsOpen={setIsOpen2}></CollapseBtn>

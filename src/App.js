@@ -1,66 +1,52 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./index.css";
-
-const tempMovieData = [
-  {
-    imdbID: "tt1375666",
-    Title: "Inception",
-    Year: "2010",
-    Poster:
-      "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg",
-  },
-  {
-    imdbID: "tt0133093",
-    Title: "The Matrix",
-    Year: "1999",
-    Poster:
-      "https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg",
-  },
-  {
-    imdbID: "tt6751668",
-    Title: "Parasite",
-    Year: "2019",
-    Poster:
-      "https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_SX300.jpg",
-  },
-];
-
-const tempWatchedData = [
-  {
-    imdbID: "tt1375666",
-    Title: "Inception",
-    Year: "2010",
-    Poster:
-      "https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg",
-    runtime: 148,
-    imdbRating: 8.8,
-    userRating: 10,
-  },
-  {
-    imdbID: "tt0088763",
-    Title: "Back to the Future",
-    Year: "1985",
-    Poster:
-      "https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg",
-    runtime: 116,
-    imdbRating: 8.5,
-    userRating: 9,
-  },
-];
 
 const average = (arr) =>
   arr.reduce((acc, cur, i, arr) => acc + cur / arr.length, 0);
-
+const KEY = "65165805";
 export default function App() {
-  const [movies, setMovies] = useState(tempMovieData);
-  const [watched, setWatched] = useState(tempWatchedData);
+  const [movies, setMovies] = useState([]);
+  const [watched, setWatched] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [err, setErr] = useState("");
+  const [qry, setQry] = useState("");
+
+  useEffect(
+    function () {
+      setIsLoading(true);
+      setErr("");
+      fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=${qry}`)
+        .then((res) => res.json())
+        .then((result) => {
+          const resp = result.Response.toLowerCase() === "true";
+          if (!resp) {
+            let errMsg = qry.length < 3 ? "Type to Search" : result.Error;
+            throw new Error(errMsg);
+          }
+          setMovies(result.Search);
+        })
+        .catch((e) => {
+          setErr(e.message);
+          setMovies([]);
+        })
+        .finally(function () {
+          setIsLoading(false);
+        });
+    },
+    [qry]
+  );
 
   return (
     <>
-      <NavBar movies={movies} />
+      <NavBar>
+        <Search qry={qry} setQry={setQry} />
+        <NumResults count={movies.length} />
+      </NavBar>
       <Main>
         <Box>
-          <MovieList movies={movies} />
+          {isLoading && <Loader />}
+          {!isLoading && !err && <MovieList movies={movies} />}
+          {err && <ErrMsg msg={err} />}
         </Box>
         <Box>
           <Summary watched={watched} />
@@ -71,12 +57,23 @@ export default function App() {
   );
 }
 
-function NavBar({ movies }) {
+function Loader() {
+  return <p className="loader">Loading...</p>;
+}
+
+function ErrMsg({ msg }) {
+  return (
+    <p className="error">
+      <span>⛔</span> {msg}
+    </p>
+  );
+}
+
+function NavBar({ children }) {
   return (
     <nav className="nav-bar">
       <Logo />
-      <Search />
-      <NumResults count={movies.length} />
+      {children}
     </nav>
   );
 }
@@ -90,16 +87,14 @@ function Logo() {
   );
 }
 
-function Search(props) {
-  const [query, setQuery] = useState("");
-
+function Search({ qry, setQry }) {
   return (
     <input
       className="search"
       type="text"
       placeholder="Search movies..."
-      value={query}
-      onChange={(e) => setQuery(e.target.value)}
+      // value={qry}
+      onChange={(e) => setQry(e.target.value)}
     />
   );
 }

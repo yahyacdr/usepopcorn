@@ -15,9 +15,14 @@ export default function App() {
 
   useEffect(
     function () {
+      const controller = new AbortController();
+      const signal = controller.signal;
+
       setIsLoading(true);
       setErr("");
-      fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=${qry}`)
+      fetch(`http://www.omdbapi.com/?apikey=${KEY}&s=${qry}`, {
+        signal: signal,
+      })
         .then((res) => res.json())
         .then((result) => {
           const resp = result.Response.toLowerCase() === "true";
@@ -28,12 +33,18 @@ export default function App() {
           setMovies(result.Search);
         })
         .catch((e) => {
-          setErr(e.message);
-          setMovies([]);
+          console.error(e);
+          if (e.name !== "AbortError") {
+            setErr(e.message);
+            setMovies([]);
+          }
         })
         .finally(function () {
           setIsLoading(false);
         });
+      return function () {
+        controller.abort();
+      };
     },
     [qry]
   );
@@ -107,7 +118,12 @@ function SelectedMovie({ selectedId, onCloseMovie, onAddWatched, watched }) {
   } = selectedMovie;
   useEffect(
     function () {
-      fetch(`http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`)
+      const controller = new AbortController();
+      const signal = controller.signal;
+
+      fetch(`http://www.omdbapi.com/?apikey=${KEY}&i=${selectedId}`, {
+        signal: signal,
+      })
         .then((res) => res.json())
         .then((result) => {
           const resp = result.Response.toLowerCase() === "true";
@@ -118,9 +134,20 @@ function SelectedMovie({ selectedId, onCloseMovie, onAddWatched, watched }) {
         })
         .catch((e) => {})
         .finally(function () {});
+      return function () {
+        controller.abort();
+      };
     },
     [selectedId]
   );
+
+  useEffect(function () {
+    if (!title) return;
+    document.title = `Movie | ${title}`;
+    return function () {
+      document.title = "usePopcorn";
+    };
+  });
   const isWatched = watched.map((movie) => movie.imdbID).includes(selectedId);
   const currUserRating = watched.find(
     (movie) => movie.imdbID === selectedId
@@ -144,7 +171,7 @@ function SelectedMovie({ selectedId, onCloseMovie, onAddWatched, watched }) {
         <button className="btn-back" onClick={onCloseMovie}>
           &larr;
         </button>
-        <img src={poster} alt={`Poster of ${selectedMovie} movie`} />
+        <img src={poster} alt={`Poster of ${title} movie`} />
         <div className="details-overview">
           <h2>{title}</h2>
           <p>

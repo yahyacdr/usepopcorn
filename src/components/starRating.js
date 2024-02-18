@@ -11,6 +11,7 @@ export default function StarRating({
   maxRating = 5,
   color = "#fcc719",
   size = 32,
+  onSetRating,
 }) {
   const cntnrStyle = {
     display: "flex",
@@ -31,6 +32,7 @@ export default function StarRating({
   };
   const [rating, setRating] = useState(0);
   const [hoverStar, setHoverStar] = useState(0);
+  onSetRating(rating);
   return (
     <div style={cntnrStyle}>
       <div style={starCntntStyle}>

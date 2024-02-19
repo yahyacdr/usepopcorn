@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import StarRating from "./components/starRating";
 import "./index.css";
 
@@ -7,11 +7,13 @@ const average = (arr) =>
 const KEY = "65165805";
 export default function App() {
   const [movies, setMovies] = useState([]);
-  const [watched, setWatched] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [err, setErr] = useState("");
   const [qry, setQry] = useState("");
   const [selectedId, setSelectedId] = useState(null);
+  const [watched, setWatched] = useState(
+    () => JSON.parse(localStorage.getItem("watched")) || []
+  );
 
   useEffect(
     function () {
@@ -33,8 +35,8 @@ export default function App() {
           setMovies(result.Search);
         })
         .catch((e) => {
-          console.error(e);
           if (e.name !== "AbortError") {
+            console.error(e);
             setErr(e.message);
             setMovies([]);
           }
@@ -47,6 +49,13 @@ export default function App() {
       };
     },
     [qry]
+  );
+
+  useEffect(
+    function () {
+      localStorage.setItem("watched", JSON.stringify(watched));
+    },
+    [watched]
   );
 
   function handleSelected(id) {
@@ -240,12 +249,19 @@ function Logo() {
 }
 
 function Search({ qry, setQry }) {
+  const inputEl = useRef(null);
+
+  useEffect(function () {
+    inputEl.current.focus();
+  }, []);
   return (
     <input
       className="search"
       type="text"
       placeholder="Search movies..."
       onChange={(e) => setQry(e.target.value)}
+      value={qry}
+      ref={inputEl}
     />
   );
 }
